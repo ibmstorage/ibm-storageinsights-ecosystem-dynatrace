@@ -1,0 +1,118 @@
+{
+  "types": {
+    "dynatrace.datasource.python:storage_insights_extension-endpoint": {
+      "type": "object",
+      "displayName": "Storage_insights_extension Endpoint",
+      "summaryPattern": "Storage_insights_extension {baseURL}",
+      "properties": {
+        "baseURL": {
+          "displayName": "Base URL",
+          "type": "text",
+          "nullable": false,
+          "default": "",
+          "constraints": [
+            {
+              "type": "LENGTH",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          ],
+          "maxItems": 1
+        },
+        "tenantId": {
+          "displayName": "Tenant Id",
+          "type": "text",
+          "nullable": false,
+          "default": "",
+          "constraints": [
+            {
+              "type": "LENGTH",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          ],
+          "maxItems": 1
+        },
+        "apiKey": {
+          "displayName": "API Key",
+          "type": "secret",
+          "nullable": false,
+          "default": "",
+          "constraints": [
+            {
+              "type": "LENGTH",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          ],
+          "maxItems": 1
+        }
+      }
+    },
+    "pythonRemote": {
+      "type": "object",
+      "properties": {
+        "endpoints": {
+          "displayName": "Storage_insights_extension endpoint",
+          "type": "list",
+          "items": {
+            "type": {
+              "$ref": "#/types/dynatrace.datasource.python:storage_insights_extension-endpoint"
+            }
+          },
+          "nullable": false,
+          "minItems": 1,
+          "maxItems": 100,
+          "metaData": {
+            "addItemButton": "Add endpoint"
+          }
+        }
+      }
+    },
+    "pythonLocal": {
+      "type": "object",
+      "properties": {
+        "endpoints": {
+          "displayName": "Storage_insights_extension endpoint",
+          "type": "list",
+          "items": {
+            "type": {
+              "$ref": "#/types/dynatrace.datasource.python:storage_insights_extension-endpoint"
+            }
+          },
+          "nullable": false,
+          "minItems": 1,
+          "maxItems": 100,
+          "metaData": {
+            "addItemButton": "Add endpoint"
+          }
+        }
+      }
+    }
+  },
+  "dynatrace": "1",
+  "description": "storage_insights_extension configuration",
+  "schemaId": "python-extension.activation",
+  "displayName": "storage_insights_extension configuration",
+  "ownerProductManagement": "dynatrace",
+  "ownerDevelopment": "dynatrace",
+  "maturity": "GENERAL_AVAILABILITY",
+  "allowedScopes": [
+    "tenant"
+  ],
+  "multiObject": false,
+  "properties": {
+    "pythonLocal": {
+      "displayName": "Python Local Extension",
+      "type": {
+        "$ref": "#/types/pythonLocal"
+      }
+    },
+    "pythonRemote": {
+      "displayName": "Python Remote Extension",
+      "type": {
+        "$ref": "#/types/pythonRemote"
+      }
+    }
+  }
+}

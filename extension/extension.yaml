@@ -1,0 +1,1779 @@
+name: custom:ibm-storage-insights-extension
+version: 0.0.1
+minDynatraceVersion: "1.285"
+author:
+  name: "Dynatrace"
+
+python:
+  runtime:
+    module: storage_insights_extension
+    version:
+      min: "3.10"
+
+  activation:
+    remote:
+      path: activationSchema.json
+    local:
+      path: activationSchema.json
+
+topology:
+  types:
+    - name: storage_insights:systems
+      enabled: true
+      displayName: Block Storage System
+      rules:
+        - idPattern: block_{system_id}
+          instanceNamePattern: "{block_system_name}"
+          sources:
+            - sourceType: Metrics
+              condition: $prefix(si.tenant.block.systems)
+          attributes:
+            - key: block_system_name
+              pattern: '{block_system_name}'
+            - key: system_id
+              pattern: '{system_id}'
+              # displayName: checkin
+        - idPattern: block_{system_id}
+          instanceNamePattern: "{block_system_name}"
+          sources:
+            - sourceType: Metrics
+              condition: $prefix(si.tenant.block.system.volumes)
+        - idPattern: block_{system_id}
+          instanceNamePattern: "{block_system_name}"
+          sources:
+            - sourceType: Metrics
+              condition: $prefix(si.tenant.block.system.pools)
+        # - idPattern: block_{system_id}
+        #   instanceNamePattern: "{block_system_name}"
+        #   sources:
+        #     - sourceType: Metrics
+        #       condition: $prefix(si.tenant.block.system.fcports)
+        - idPattern: block_{system_id}
+          instanceNamePattern: "{block_system_name}"
+          sources:
+            - sourceType: Metrics
+              condition: $prefix(si.tenant.block.system.drives)
+        # - idPattern: block_{system_id}
+        #   instanceNamePattern: "{block_system_name}"
+        #   sources:
+        #     - sourceType: Metrics
+        #       condition: $prefix(si.tenant.block.system.ipports)
+        # - idPattern: block_{system_id}
+        #   instanceNamePattern: "{block_system_name}"
+        #   sources:
+        #     - sourceType: Metrics
+        #       condition: $prefix(si.tenant.block.system.mdisks)
+    - name: storage_insights:systems_volume
+      enabled: true
+      displayName: Volume
+      rules:
+        - idPattern: volume_{system_id}_{volume_natural_key}
+          instanceNamePattern: "{volume_name}"
+          sources:
+            - sourceType: Metrics
+              condition: $prefix(si.tenant.block.system.volumes)
+          attributes:
+            - key: volume_name
+              pattern: '{volume_name}'
+            - key: volume_nk
+              pattern: '{volume_natural_key}'
+            - key: volume_id
+              pattern: '{volume_id}'
+            - key: system_id
+              pattern: '{system_id}'
+            - key : volume_status
+              pattern: '{volume_status}'
+            - key : volume_pool_name
+              pattern: '{volume_pool_name}'
+            - key : hosts
+              pattern: '{hosts}'
+            - key : compressed
+              pattern: '{compressed}'
+            - key : io_group
+              pattern: '{io_group}'
+            - key : node
+              pattern: '{node}'
+            - key : thin_provisioned
+              pattern: '{thin_provisioned}'
+            - key : capacity_bytes
+              pattern: '{capacity_bytes}'
+    - name: storage_insights:systems_pool
+      enabled: true
+      displayName: Pool
+      rules:
+        - idPattern: pool_{system_id}_{pool_natural_key}
+          instanceNamePattern: "{pool_name}"
+          sources:
+            - sourceType: Metrics
+              condition: $prefix(si.tenant.block.system.pools)
+          attributes:
+            - key: pool_name
+              pattern: '{pool_name}'
+            - key: pool_nk
+              pattern: '{pool_natural_key}'
+            - key: system_id
+              pattern: '{system_id}'
+            - key: pool_status
+              pattern: '{pool_status}'
+            - key: encryption
+              pattern: '{encryption}'
+            - key: mdisks_count
+              pattern: '{mdisks_count}'
+            - key: drives_count
+              pattern: '{drives_count}'
+            - key: volumes_count
+              pattern: '{volumes_count}' 
+            - key: solid_state
+              pattern: '{solid_state}'
+            - key: used_capacity_bytes
+              pattern: '{used_capacity_bytes}' 
+            - key: avail_cap_bytes
+              pattern: '{available_capacity_bytes}'
+            - key: compression_ratio
+              pattern: '{compression_ratio}'
+    # - name: storage_insights:systems_fcport
+    #   enabled: true
+    #   displayName: FC Port
+    #   rules:
+    #     - idPattern: fcport_{system_id}_{fcport_natural_key}
+    #       instanceNamePattern: "{fcport_name}"
+    #       sources:
+    #         - sourceType: Metrics
+    #           condition: $prefix(si.tenant.block.system.fcports)
+    #       attributes:
+    #         - key: fcport_name
+    #           pattern: '{fcport_name}'
+    #         - key: fcport_nk
+    #           pattern: '{fcport_natural_key}'
+    #         - key: system_id
+    #           pattern: '{system_id}'
+    #         - key: fcport_status
+    #           pattern: '{fcport_status}'
+    #         - key: node
+    #           pattern: '{node}'
+    #         - key: speed_gbps
+    #           pattern: '{speed_gbps}'      
+    - name: storage_insights:systems_drive
+      enabled: true
+      displayName: Drive
+      rules:
+        - idPattern: drive_{system_id}_{drive_natural_key}
+          instanceNamePattern: "{drive_name}"
+          sources:
+            - sourceType: Metrics
+              condition: $prefix(si.tenant.block.system.drives)
+          attributes:
+            - key: drive_name
+              pattern: '{drive_name}'
+            - key: drive_nk
+              pattern: '{drive_natural_key}'
+            - key: system_id
+              pattern: '{system_id}'
+            - key: drive_status
+              pattern: '{drive_status}'
+            - key: raid_array
+              pattern: '{raid_array}'
+            - key: class
+              pattern: '{class}'
+            - key: speed_rpm
+              pattern: '{speed_rpm}'
+            - key: capacity_bytes
+              pattern: '{capacity_bytes}' 
+            - key: encryption
+              pattern: '{encryption}'
+            - key: vendor
+              pattern: '{vendor}' 
+            - key: model
+              pattern: '{model}'
+            - key: serial_number
+              pattern: '{serial_number}'
+            - key: firmware
+              pattern: '{firmware}'
+            - key: compressed
+              pattern: '{compressed}'
+    # - name: storage_insights:systems_ipport
+    #   enabled: true
+    #   displayName: IP Port
+    #   rules:
+    #     - idPattern: ipport_{system_id}_{ipport_natural_key}
+    #       instanceNamePattern: "{ipport_name}"
+    #       sources:
+    #         - sourceType: Metrics
+    #           condition: $prefix(si.tenant.block.system.ipports)
+    #       attributes:
+    #         - key: ipport_name
+    #           pattern: '{ipport_name}'
+    #         - key: ipport_nk
+    #           pattern: '{ipport_natural_key}'
+    #         - key: system_id
+    #           pattern: '{system_id}'
+    #         - key: ipport_status
+    #           pattern: '{ipport_status}'
+    #         - key: acknowledged
+    #           pattern: '{acknowledged}'
+    #         - key: ip_address
+    #           pattern: '{ip_address}'
+    #         - key: iqn
+    #           pattern: '{iqn}'
+    #         - key: is_host_attached
+    #           pattern: '{is_host_attached}' 
+    #         - key: is_storage_attached
+    #           pattern: '{is_storage_attached}'
+    #         - key: management
+    #           pattern: '{management}' 
+    #         - key: node
+    #           pattern: '{node}'
+    #         - key: speed_gbps
+    #           pattern: '{speed_gbps}'
+    #         - key: storage_system
+    #           pattern: '{storage_system}'
+    # - name: storage_insights:systems_mdisk
+    #   enabled: true
+    #   displayName: Managed Disk
+    #   rules:
+    #     - idPattern: mdisk_{system_id}_{mdisk_natural_key}
+    #       instanceNamePattern: "{mdisk_name}"
+    #       sources:
+    #         - sourceType: Metrics
+    #           condition: $prefix(si.tenant.block.system.mdisks)
+    #       attributes:
+    #         - key: mdisk_name
+    #           pattern: '{mdisk_name}'
+    #         - key: mdisk_nk
+    #           pattern: '{mdisk_natural_key}'
+    #         - key: system_id
+    #           pattern: '{system_id}'
+    #         - key: mdisk_status
+    #           pattern: '{mdisk_status}'
+    #         - key: avail_cap_bytes
+    #           pattern: '{available_capacity_bytes}'
+    #         - key: capacity_bytes
+    #           pattern: '{capacity_bytes}'
+    #         - key: class
+    #           pattern: '{class}'
+    #         - key: drive_comp_ratio
+    #           pattern: '{drive_compression_ratio}' 
+    #         - key: mode
+    #           pattern: '{mode}'
+    #         - key: pool
+    #           pattern: '{pool}' 
+    #         - key: total_comp_ratio
+    #           pattern: '{total_compression_ratio}'
+    #         - key: volumes_count
+    #           pattern: '{volumes_count}'
+  relationships:
+    - enabled: true
+      sources:
+        - sourceType: Metrics
+          condition: $prefix(si.tenant.block.system.volumes)
+      fromType: storage_insights:systems_volume
+      typeOfRelation: CHILD_OF
+      toType: storage_insights:systems
+    - enabled: true
+      sources:
+        - sourceType: Metrics
+          condition: $prefix(si.tenant.block.system.pools)
+      fromType: storage_insights:systems_pool
+      typeOfRelation: CHILD_OF
+      toType: storage_insights:systems
+    # - enabled: true
+    #   sources:
+    #     - sourceType: Metrics
+    #       condition: $prefix(si.tenant.block.system.fcports)
+    #   fromType: storage_insights:systems_fcport
+    #   typeOfRelation: CHILD_OF
+    #   toType: storage_insights:systems
+    - enabled: true
+      sources:
+        - sourceType: Metrics
+          condition: $prefix(si.tenant.block.system.drives)
+      fromType: storage_insights:systems_drive
+      typeOfRelation: CHILD_OF
+      toType: storage_insights:systems
+    # - enabled: true
+    #   sources:
+    #     - sourceType: Metrics
+    #       condition: $prefix(si.tenant.block.system.ipports)
+    #   fromType: storage_insights:systems_ipport
+    #   typeOfRelation: CHILD_OF
+    #   toType: storage_insights:systems
+    # - enabled: true
+    #   sources:
+    #     - sourceType: Metrics
+    #       condition: $prefix(si.tenant.block.system.mdisks)
+    #   fromType: storage_insights:systems_mdisk
+    #   typeOfRelation: CHILD_OF
+    #   toType: storage_insights:systems
+screens:
+  - entityType: storage_insights:systems
+    actions: 
+      - actionScope: GLOBAL_LIST
+        actions: 
+          - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+            visualization:
+              iconOnly: false
+              icon: options-menu
+              displayName: Configure extension
+      - actionScope: GLOBAL_DETAILS
+        actions: 
+          - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+            visualization:
+              iconOnly: false
+              icon: options-menu
+              displayName: Configure extension
+    listSettings:
+      staticContent:
+        showGlobalFilter: false
+        header:
+          title: Block Storage System Entities
+          description: List of all entities created by the custom:ibm-storage-insights-extension extension
+        hideDefaultBreadcrumb: true
+        breadcrumbs:
+          - type: NOOP
+            displayName: Extension 2.0
+          - type: NOOP
+            displayName: Block Storage Systems
+      layout:
+        autoGenerate: false
+        cards:
+          - key: storage_insightssystems_list_self
+            type: ENTITIES_LIST
+          - type: INJECTIONS
+    detailsSettings:
+      staticContent:
+        showProblems: true
+        showProperties: true
+        showTags: true
+        showGlobalFilter: false
+        showAddTag: true
+        breadcrumbs:
+          - type: NOOP
+            displayName: Extension 2.0
+          - type: ENTITY_LIST_REF
+            entityType: storage_insights:systems
+            displayName: Block Storage Systems
+      layout:
+        autoGenerate: false
+        cards: 
+          - key: si_link
+            type: MESSAGE
+          - key: storage_insightssystems_list_storage_insightssystems_volume
+            type: ENTITIES_LIST
+          - key: storage_insightssystems_list_storage_insightssystems_pool
+            type: ENTITIES_LIST
+          # - key: storage_insightssystems_list_storage_insightssystems_fcport
+          #   type: ENTITIES_LIST
+          - key: storage_insightssystems_list_storage_insightssystems_drive
+            type: ENTITIES_LIST
+          # - key: storage_insightssystems_list_storage_insightssystems_ipport
+          #   type: ENTITIES_LIST
+          # - key: storage_insightssystems_list_storage_insightssystems_mdisk
+          #   type: ENTITIES_LIST
+          - key: vol_perf_met_utilization
+            type: CHART_GROUP
+          # - key: drive_perf_met_utilization
+          #   type: CHART_GROUP
+          #   width: FULL_SIZE
+          - type: INJECTIONS 
+    messageCards:
+      - key: si_link
+        type: MESSAGE
+        message:
+          text: Only maximum 500 records are displayed for related resources. Please login to IBM Storage Insights GUI [https://insights.ibm.com/gui/{tenantID}/gui/#storageDetail?l3={systemID}] to view more records by updating placeholder values {tenantID}, {systemID} in the URL.
+          theme: INFO
+    chartsCards: 
+      - key: vol_perf_met_utilization
+        mode: NORMAL
+        numberOfVisibleCharts: 1
+        chartsInRow: 1
+        displayName: Top 5 Volumes Utilization
+        # hideEmptyCharts: true
+        charts: 
+          # - displayName: volumes read data rate
+          #   visualizationType: GRAPH_CHART
+          #   graphChartConfig:
+          #     visualization:
+          #       themeColor: DEFAULT
+          #       seriesType: LINE
+          #     connectGaps: true
+          #     #defaultAggregation: VALUE 
+          #     metrics:
+          #       - metricSelector: si.tenant.block.system.volumes.read.data.rate.utilization:splitBy(vol_name):avg:default(0):auto:sort(value(avg,descending)):limit(5)
+          #         visualization:
+          #           themeColor: DEFAULT
+          #           seriesType: LINE
+          # - displayName: volumes write data rate
+          #   visualizationType: GRAPH_CHART
+          #   graphChartConfig:
+          #     visualization:
+          #       themeColor: DEFAULT
+          #       seriesType: LINE
+          #     connectGaps: true
+          #     defaultAggregation: AVG  
+          #     metrics:
+          #       - metricSelector: si.tenant.block.system.volumes.write.data.rate.utilization:splitBy(vol_name):avg:default(0):auto:sort(value(avg,descending)):limit(5)
+          #         visualization:
+          #           themeColor: DEFAULT
+          #           seriesType: LINE
+          # - displayName: volumes total data rate
+          #   visualizationType: GRAPH_CHART
+          #   graphChartConfig:
+          #     visualization:
+          #       themeColor: DEFAULT
+          #       seriesType: LINE
+          #     connectGaps: true
+          #     defaultAggregation: AVG  
+          #     metrics:
+          #       - metricSelector: si.tenant.block.system.volumes.total.data.rate.utilization:splitBy(vol_name):avg:default(0):auto:sort(value(avg,descending)):limit(5)
+          #         visualization:
+          #           themeColor: DEFAULT
+          #           seriesType: LINE
+          - displayName: volumes overall total io rate
+            visualizationType: GRAPH_CHART
+            graphChartConfig:
+              visualization:
+                themeColor: DEFAULT
+                seriesType: LINE
+              defaultAggregation: AVG
+              connectGaps: true  
+              metrics:
+                - metricSelector: si.tenant.block.system.volumes.overall.tot.io.rate.utilization:splitBy(vol_name):avg:default(0):auto:sort(value(avg,descending)):limit(5)
+                  visualization:
+                    themeColor: DEFAULT
+                    seriesType: LINE
+          - displayName: volumes total response time
+            visualizationType: GRAPH_CHART
+            graphChartConfig:
+              visualization:
+                themeColor: DEFAULT
+                seriesType: LINE
+              connectGaps: true 
+              defaultAggregation: AVG 
+              metrics:
+                - metricSelector: si.tenant.block.system.volumes.tot.response.time.rate.utilization:splitBy(vol_name):avg:default(0):auto:sort(value(avg,descending)):limit(5)
+                  visualization:
+                    themeColor: DEFAULT
+                    seriesType: LINE
+          # - displayName: volumes overall read cache hit percent
+          #   visualizationType: GRAPH_CHART
+          #   graphChartConfig:
+          #     visualization:
+          #       themeColor: DEFAULT
+          #       seriesType: LINE
+          #     connectGaps: true
+          #     defaultAggregation: AVG  
+          #     metrics:
+          #       - metricSelector: si.tenant.block.system.volumes.overall.read.cache.hit.per.utilization:splitBy(vol_name):avg:default(0):auto:sort(value(avg,descending)):limit(5)
+          #         visualization:
+          #           themeColor: DEFAULT
+          #           seriesType: LINE
+      # - key: drive_perf_met_utilization
+      #   mode: NORMAL
+      #   numberOfVisibleCharts: 1
+      #   chartsInRow: 1
+      #   displayName: Top 5 Drives Utilization
+      #   charts: 
+      #     - displayName: drives total io rate
+      #       visualizationType: GRAPH_CHART
+      #       graphChartConfig:
+      #         visualization:
+      #           themeColor: DEFAULT
+      #           seriesType: LINE
+      #         connectGaps: true  
+      #         metrics:
+      #           - metricSelector: si.tenant.block.system.drives.total.io.rate.utilization:splitBy(disk_name):avg:default(0):auto:sort(value(avg,descending)):limit(5)
+      #             visualization:
+      #               themeColor: DEFAULT
+      #               seriesType: LINE
+      #         defaultAggregation : AVG
+      #     - displayName: drives total data rate
+      #       visualizationType: GRAPH_CHART
+      #       graphChartConfig:
+      #         visualization:
+      #           themeColor: DEFAULT
+      #           seriesType: LINE
+      #         connectGaps: true
+      #         defaultAggregation: AVG  
+      #         metrics:
+      #           - metricSelector: si.tenant.block.system.drives.total.data.rate.utilization:splitBy(disk_name):avg:default(0):auto:sort(value(avg,descending)):limit(5)
+      #             visualization:
+      #               themeColor: DEFAULT
+      #               seriesType: LINE
+      #     - displayName: drives total response time
+      #       visualizationType: GRAPH_CHART
+      #       graphChartConfig:
+      #         visualization:
+      #           themeColor: DEFAULT
+      #           seriesType: LINE
+      #         connectGaps: true
+      #         defaultAggregation: AVG  
+      #         metrics:
+      #           - metricSelector: si.tenant.block.system.drives.total.resp.time.utilization:splitBy(disk_name):avg:default(0):auto:sort(value(avg,descending)):limit(5)
+      #             visualization:
+      #               themeColor: DEFAULT
+      #               seriesType: LINE
+        # hideEmptyCharts: true
+    entitiesListCards: 
+      - key: storage_insightssystems_list_self
+        pageSize: 15
+        displayName: Block Storage Systems
+        displayCharts: false
+        enableDetailsExpandability: true
+        numberOfVisibleCharts: 3
+        displayIcons: true
+        hideEmptyCharts: true
+        filtering: 
+          entityFilters:
+            - displayName: Filter by
+              filters:
+                - type: entityName
+                  displayName: Name
+                  freeText: true
+                  modifier: contains
+                  defaultSearch: false
+                  distinct: false
+                  entityTypes:
+                    - storage_insights:systems
+        columns: 
+          - type: ATTRIBUTE
+            attribute:
+              key: system_id
+              displayName: System ID
+        
+        charts: []
+      - key: storage_insightssystems_list_storage_insightssystems_volume
+        pageSize: 15
+        displayName: Related Block System Volumes
+        displayCharts: false
+        enableDetailsExpandability: true
+        numberOfVisibleCharts: 4
+        displayIcons: true
+        entitySelectorTemplate: type(storage_insights:systems_volume),fromRelationships.isChildOf($(entityConditions))
+        hideEmptyCharts: true
+        charts: []
+        filtering: 
+          entityFilters:
+            - displayName: Filter by
+              filters:
+                - type: entityName
+                  displayName: Name
+                  freeText: true
+                  modifier: contains
+                  defaultSearch: false
+                  distinct: false
+                  entityTypes:
+                    - storage_insights:systems_volume
+          relationships:
+            - type(storage_insights:systems),toRelationships.isChildOf($(entityConditions))
+        columns: 
+          - type: ATTRIBUTE
+            attribute:
+              key: volume_id
+              displayName: volume ID
+          - type: ATTRIBUTE
+            attribute:
+              key: volume_status
+              displayName: status
+          - type: ATTRIBUTE
+            attribute:
+              key: volume_pool_name
+              displayName: pool name
+          - type: ATTRIBUTE
+            attribute:
+              key: hosts
+              displayName: hosts
+          - type: ATTRIBUTE
+            attribute:
+              key: compressed
+              displayName: compressed
+          - type: ATTRIBUTE
+            attribute:
+              key: thin_provisioned
+              displayName: thin provisioned
+          - type: ATTRIBUTE
+            attribute:
+              key: capacity_bytes
+              displayName: capacity bytes
+          - type: ATTRIBUTE
+            attribute:
+              key: io_group
+              displayName: ip group
+          - type: ATTRIBUTE
+            attribute:
+              key: node
+              displayName: node
+      
+          - type: ATTRIBUTE
+            attribute:
+              key: volume_id
+              displayName: volume ID
+          - type: ATTRIBUTE
+            attribute:
+              key: volume_status
+              displayName: status
+          - type: ATTRIBUTE
+            attribute:
+              key: volume_pool_name
+              displayName: pool name
+          - type: ATTRIBUTE
+            attribute:
+              key: hosts
+              displayName: hosts
+          - type: ATTRIBUTE
+            attribute:
+              key: compressed
+              displayName: compressed
+          - type: ATTRIBUTE
+            attribute:
+              key: io_group
+              displayName: ip group
+          - type: ATTRIBUTE
+            attribute:
+              key: node
+              displayName: node
+          - type: ATTRIBUTE
+            attribute:
+              key: thin_provisioned
+              displayName: thin provisioned
+          - type: ATTRIBUTE
+            attribute:
+              key: capacity_bytes
+              displayName: capacity bytes
+      - key: storage_insightssystems_list_storage_insightssystems_pool
+        pageSize: 15
+        displayName: Related Block System Pools
+        displayCharts: false
+        enableDetailsExpandability: true
+        numberOfVisibleCharts: 3
+        displayIcons: true
+        entitySelectorTemplate: type(storage_insights:systems_pool),fromRelationships.isChildOf($(entityConditions))
+        hideEmptyCharts: true
+        filtering: 
+          entityFilters:
+            - displayName: Filter by
+              filters:
+                - type: entityName
+                  displayName: Name
+                  freeText: true
+                  modifier: contains
+                  defaultSearch: false
+                  distinct: false
+                  entityTypes:
+                    - storage_insights:systems_pool
+          relationships:
+            - type(storage_insights:systems),toRelationships.isChildOf($(entityConditions))
+        columns: 
+          - type: ATTRIBUTE
+            attribute:
+              key: pool_status
+              displayName: status
+          - type: ATTRIBUTE
+            attribute:
+              key: encryption
+              displayName: encryption
+          - type: ATTRIBUTE
+            attribute:
+              key: mdisks_count
+              displayName: mdisks
+          - type: ATTRIBUTE
+            attribute:
+              key: drives_count
+              displayName: drives
+          - type: ATTRIBUTE
+            attribute:
+              key: volumes_count
+              displayName: volumes
+          - type: ATTRIBUTE
+            attribute:
+              key: used_capacity_bytes
+              displayName: used capacity bytes
+          - type: ATTRIBUTE
+            attribute:
+              key: avail_cap_bytes
+              displayName: available capacity bytes
+          - type: ATTRIBUTE
+            attribute:
+              key: compression_ratio
+              displayName: compression ratio
+          - type: ATTRIBUTE
+            attribute:
+              key: pool_nk
+              displayName: pool natural key
+          - type: ATTRIBUTE
+            attribute:
+              key: solid_state
+              displayName: solid state
+        charts: []
+      # - key: storage_insightssystems_list_storage_insightssystems_fcport
+      #   pageSize: 15
+      #   displayName: Related Block System FC Ports
+      #   displayCharts: false
+      #   enableDetailsExpandability: true
+      #   numberOfVisibleCharts: 3
+      #   displayIcons: true
+      #   entitySelectorTemplate: type(storage_insights:systems_fcport),fromRelationships.isChildOf($(entityConditions))
+      #   hideEmptyCharts: true
+      #   filtering: 
+      #     entityFilters:
+      #       - displayName: Filter by
+      #         filters:
+      #           - type: entityName
+      #             displayName: Name
+      #             freeText: true
+      #             modifier: contains
+      #             defaultSearch: false
+      #             distinct: false
+      #             entityTypes:
+      #               - storage_insights:systems_fcport
+      #     relationships:
+      #       - type(storage_insights:systems),toRelationships.isChildOf($(entityConditions))
+      #   columns: 
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: fcport_nk
+      #         displayName: fcport natural key
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: fcport_status
+      #         displayName: status
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: node
+      #         displayName: node
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: speed_gbps
+      #         displayName: speed gbps
+      #   charts: []
+      - key: storage_insightssystems_list_storage_insightssystems_drive
+        pageSize: 15
+        displayName: Related Block System Drives
+        displayCharts: false
+        enableDetailsExpandability: true
+        numberOfVisibleCharts: 3
+        displayIcons: true
+        entitySelectorTemplate: type(storage_insights:systems_drive),fromRelationships.isChildOf($(entityConditions))
+        hideEmptyCharts: true
+        displayMicroCharts: true
+        filtering: 
+          entityFilters:
+            - displayName: Filter by
+              filters:
+                - type: entityName
+                  displayName: Name
+                  freeText: true
+                  modifier: contains
+                  defaultSearch: false
+                  distinct: false
+                  entityTypes:
+                    - storage_insights:systems_drive
+          relationships:
+            - type(storage_insights:systems),toRelationships.isChildOf($(entityConditions))
+        columns: 
+          - type: ATTRIBUTE
+            attribute:
+              key: drive_nk
+              displayName: drive natural key
+          - type: ATTRIBUTE
+            attribute:
+              key: drive_status
+              displayName: status
+          - type: ATTRIBUTE
+            attribute:
+              key: raid_array
+              displayName: raid array
+          - type: ATTRIBUTE
+            attribute:
+              key: class
+              displayName: class
+          - type: ATTRIBUTE
+            attribute:
+              key: speed_rpm
+              displayName: speed rpm
+          - type: ATTRIBUTE
+            attribute:
+              key: capacity_bytes
+              displayName: capacity bytes
+          - type: ATTRIBUTE
+            attribute:
+              key: encryption
+              displayName: encryption
+          - type: ATTRIBUTE
+            attribute:
+              key: vendor
+              displayName: vendor
+          - type: ATTRIBUTE
+            attribute:
+              key: model
+              displayName: model
+          - type: ATTRIBUTE
+            attribute:
+              key: serial_number
+              displayName: serial number
+          - type: ATTRIBUTE
+            attribute:
+              key: firmware
+              displayName: firmware
+          - type: ATTRIBUTE
+            attribute:
+              key: compressed
+              displayName: compressed
+        charts: []
+      # - key: storage_insightssystems_list_storage_insightssystems_ipport
+      #   pageSize: 15
+      #   displayName: Related Block System IP Ports
+      #   displayCharts: false
+      #   enableDetailsExpandability: true
+      #   numberOfVisibleCharts: 3
+      #   displayIcons: true
+      #   entitySelectorTemplate: type(storage_insights:systems_ipport),fromRelationships.isChildOf($(entityConditions))
+      #   hideEmptyCharts: true
+      #   filtering: 
+      #     entityFilters:
+      #       - displayName: Filter by
+      #         filters:
+      #           - type: entityName
+      #             displayName: Name
+      #             freeText: true
+      #             modifier: contains
+      #             defaultSearch: false
+      #             distinct: false
+      #             entityTypes:
+      #               - storage_insights:systems_ipport
+      #     relationships:
+      #       - type(storage_insights:systems),toRelationships.isChildOf($(entityConditions))            
+      #   columns: 
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: ipport_nk
+      #         displayName: ipport natural key
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: ipport_status
+      #         displayName: status
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: acknowledged
+      #         displayName: acknowledged
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: ip_address
+      #         displayName: ip address
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: iqn
+      #         displayName: iqn
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: is_host_attached
+      #         displayName: host attached
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: is_storage_attached
+      #         displayName: storage attached
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: management
+      #         displayName: management
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: node
+      #         displayName: node
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: speed_gbps
+      #         displayName: speed gbps
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: storage_system
+      #         displayName: storage system
+      #   charts: []
+      # - key: storage_insightssystems_list_storage_insightssystems_mdisk
+      #   pageSize: 15
+      #   displayName: Related Block System Managed Disks
+      #   displayCharts: false
+      #   enableDetailsExpandability: true
+      #   numberOfVisibleCharts: 3
+      #   displayIcons: true
+      #   entitySelectorTemplate: type(storage_insights:systems_mdisk),fromRelationships.isChildOf($(entityConditions))
+      #   hideEmptyCharts: true
+      #   filtering: 
+      #     entityFilters:
+      #       - displayName: Filter by
+      #         filters:
+      #           - type: entityName
+      #             displayName: Name
+      #             freeText: true
+      #             modifier: contains
+      #             defaultSearch: false
+      #             distinct: false
+      #             entityTypes:
+      #               - storage_insights:systems_mdisk
+      #     relationships:
+      #       - type(storage_insights:systems),toRelationships.isChildOf($(entityConditions))
+      #   columns: 
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: mdisk_nk
+      #         displayName: mdisk natural key
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: mdisk_status
+      #         displayName: status
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: avail_cap_bytes
+      #         displayName: available capacity bytes
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: capacity_bytes
+      #         displayName: capacity bytes
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: class
+      #         displayName: class
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: drive_comp_ratio
+      #         displayName: compression ratio
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: mode
+      #         displayName: node
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: pool
+      #         displayName: pool
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: total_comp_ratio
+      #         displayName: total compression ratio
+      #     - type: ATTRIBUTE
+      #       attribute:
+      #         key: volumes_count
+      #         displayName: volumes
+      #   charts: []
+  - entityType: storage_insights:systems_volume
+    actions: 
+      - actionScope: GLOBAL_LIST
+        actions: 
+          - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+            visualization:
+              iconOnly: false
+              icon: options-menu
+              displayName: Configure extension
+      - actionScope: GLOBAL_DETAILS
+        actions: 
+          - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+            visualization:
+              iconOnly: false
+              icon: options-menu
+              displayName: Configure extension
+    listSettings:
+      staticContent:
+        showGlobalFilter: false
+        header:
+          title: Volume entities
+          description: List of all entities created by the custom:ibm-storage-insights-extension extension
+        hideDefaultBreadcrumb: true
+        breadcrumbs:
+          - type: NOOP
+            displayName: Extension 2.0
+          - type: NOOP
+            displayName: Block System Volumes
+      layout:
+        autoGenerate: false
+        cards:
+          - key: storage_insightssystems_volume_list_self
+            type: ENTITIES_LIST
+          - type: INJECTIONS
+    detailsSettings:
+      staticContent:
+        showProblems: true
+        showProperties: true
+        showTags: true
+        showGlobalFilter: false
+        showAddTag: true
+        breadcrumbs:
+          - type: NOOP
+            displayName: Extension 2.0
+          - type: ENTITY_LIST_REF
+            entityType: storage_insights:systems_volume
+            displayName: Block System Volumes
+      layout:
+        autoGenerate: false
+        cards: 
+          - key: storage_insightssystems_volume_list_storage_insightssystems
+            type: ENTITIES_LIST
+          - type: INJECTIONS
+    chartsCards: []
+    entitiesListCards: 
+      - key: storage_insightssystems_volume_list_self
+        pageSize: 15
+        displayName: List of Block System volumes
+        displayCharts: false
+        enableDetailsExpandability: true
+        numberOfVisibleCharts: 3
+        displayIcons: true
+        hideEmptyCharts: true
+        filtering: 
+          entityFilters:
+            - displayName: Filter by
+              filters:
+                - type: entityName
+                  displayName: Name
+                  freeText: true
+                  modifier: contains
+                  defaultSearch: true
+                  distinct: false
+                  entityTypes:
+                    - storage_insights:systems_volume
+        charts: []
+      - key: storage_insightssystems_volume_list_storage_insightssystems
+        pageSize: 5
+        displayName: List of related Block Storage Systems
+        displayCharts: false
+        enableDetailsExpandability: true
+        numberOfVisibleCharts: 3
+        displayIcons: true
+        entitySelectorTemplate: type(storage_insights:systems),toRelationships.isChildOf($(entityConditions))
+        hideEmptyCharts: true
+        filtering: 
+          entityFilters:
+            - displayName: Filter by
+              filters:
+                - type: entityName
+                  displayName: Name
+                  freeText: true
+                  modifier: contains
+                  defaultSearch: true
+                  distinct: false
+                  entityTypes:
+                    - storage_insights:systems
+        columns: []
+        charts: []
+    propertiesCard:
+          properties:
+            - type: ATTRIBUTE
+              attribute:
+                key: volume_name
+                displayName: Name
+            - type: ATTRIBUTE
+              attribute:
+                key: volume_nk
+                displayName: Natural Key
+            - type: ATTRIBUTE
+              attribute:
+                key: capacity_bytes
+                displayName: Capacity Bytes
+            - type: ATTRIBUTE
+              attribute:
+                key: volume_id
+                displayName: ID
+            - type: ATTRIBUTE
+              attribute:
+                key: io_group
+                displayName: IO Group
+            - type: ATTRIBUTE
+              attribute:
+                key: system_id
+                displayName: System ID
+            - type: ATTRIBUTE
+              attribute:
+                key: thin_provisioned
+                displayName: Thin Provisioned
+            - type: ATTRIBUTE
+              attribute:
+                key: volume_pool_name
+                displayName: Pool
+            - type: ATTRIBUTE
+              attribute:
+                key: volume_status
+                displayName: Status
+
+  - entityType: storage_insights:systems_pool
+    actions: 
+      - actionScope: GLOBAL_LIST
+        actions: 
+          - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+            visualization:
+              iconOnly: false
+              icon: options-menu
+              displayName: Configure extension
+      - actionScope: GLOBAL_DETAILS
+        actions: 
+          - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+            visualization:
+              iconOnly: false
+              icon: options-menu
+              displayName: Configure extension
+    listSettings:
+      staticContent:
+        showGlobalFilter: false
+        header:
+          title: Pool entities
+          description: List of all entities created by the custom:ibm-storage-insights-extension extension
+        hideDefaultBreadcrumb: true
+        breadcrumbs:
+          - type: NOOP
+            displayName: Extension 2.0
+          - type: NOOP
+            displayName: Block System Pools
+      layout:
+        autoGenerate: false
+        cards:
+          - key: storage_insightssystems_pool_list_self
+            type: ENTITIES_LIST
+          - type: INJECTIONS
+    detailsSettings:
+      staticContent:
+        showProblems: true
+        showProperties: true
+        showTags: true
+        showGlobalFilter: false
+        showAddTag: true
+        breadcrumbs:
+          - type: NOOP
+            displayName: Extension 2.0
+          - type: ENTITY_LIST_REF
+            entityType: storage_insights:systems_pool
+            displayName: Block System Pools
+      layout:
+        autoGenerate: false
+        cards: 
+          - key: storage_insightssystems_pool_list_storage_insightssystems
+            type: ENTITIES_LIST
+          - type: INJECTIONS
+    propertiesCard:
+          properties:
+            - type: ATTRIBUTE
+              attribute:
+                key: pool_name
+                displayName: Name
+            - type: ATTRIBUTE
+              attribute:
+                key: pool_natural_key
+                displayName: Natural Key
+            - type: ATTRIBUTE
+              attribute:
+                key: system_id
+                displayName: System ID
+            - type: ATTRIBUTE
+              attribute:
+                key: pool_status
+                displayName: Status
+            - type: ATTRIBUTE
+              attribute:
+                key: mdisks_count
+                displayName: Mdisks
+            - type: ATTRIBUTE
+              attribute:
+                key: drives_count
+                displayName: Drives
+            - type: ATTRIBUTE
+              attribute:
+                key: volumes_count
+                displayName: Volumes
+            - type: ATTRIBUTE
+              attribute:
+                key: solid_state
+                displayName: Solid State
+            - type: ATTRIBUTE
+              attribute:
+                key: used_capacity_bytes
+                displayName: Used Capacity Bytes
+            - type: ATTRIBUTE
+              attribute:
+                key: avail_cap_bytes
+                displayName: Available Capacity Bytes
+            - type: ATTRIBUTE
+              attribute:
+                key: compression_ratio
+                displayName: Compression Ratio
+    chartsCards: []
+    entitiesListCards: 
+      - key: storage_insightssystems_pool_list_self
+        pageSize: 15
+        displayName: List of Block System Pools
+        displayCharts: false
+        enableDetailsExpandability: true
+        numberOfVisibleCharts: 3
+        displayIcons: true
+        hideEmptyCharts: true
+        filtering: 
+          entityFilters:
+            - displayName: Filter by
+              filters:
+                - type: entityName
+                  displayName: Name
+                  freeText: true
+                  modifier: contains
+                  defaultSearch: true
+                  distinct: false
+                  entityTypes:
+                    - storage_insights:systems_pool
+        columns: []
+        charts: []
+      - key: storage_insightssystems_pool_list_storage_insightssystems
+        pageSize: 5
+        displayName: List of related Block Storage Systems
+        displayCharts: false
+        enableDetailsExpandability: true
+        numberOfVisibleCharts: 3
+        displayIcons: true
+        entitySelectorTemplate: type(storage_insights:systems),toRelationships.isChildOf($(entityConditions))
+        hideEmptyCharts: true
+        filtering: 
+          entityFilters:
+            - displayName: Filter by
+              filters:
+                - type: entityName
+                  displayName: Name
+                  freeText: true
+                  modifier: contains
+                  defaultSearch: true
+                  distinct: false
+                  entityTypes:
+                    - storage_insights:systems
+        columns: []
+        charts: []
+  # - entityType: storage_insights:systems_fcport
+  #   actions: 
+  #     - actionScope: GLOBAL_LIST
+  #       actions: 
+  #         - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+  #           visualization:
+  #             iconOnly: false
+  #             icon: options-menu
+  #             displayName: Configure extension
+  #     - actionScope: GLOBAL_DETAILS
+  #       actions: 
+  #         - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+  #           visualization:
+  #             iconOnly: false
+  #             icon: options-menu
+  #             displayName: Configure extension
+  #   listSettings:
+  #     staticContent:
+  #       showGlobalFilter: false
+  #       header:
+  #         title: FC Port entities
+  #         description: List of all entities created by the custom:ibm-storage-insights-extension extension
+  #       hideDefaultBreadcrumb: true
+  #       breadcrumbs:
+  #         - type: NOOP
+  #           displayName: Extension 2.0
+  #         - type: NOOP
+  #           displayName: Block System FC Ports
+  #     layout:
+  #       autoGenerate: false
+  #       cards:
+  #         - key: storage_insightssystems_fcport_list_self
+  #           type: ENTITIES_LIST
+  #         - type: INJECTIONS
+  #   detailsSettings:
+  #     staticContent:
+  #       showProblems: true
+  #       showProperties: true
+  #       showTags: true
+  #       showGlobalFilter: false
+  #       showAddTag: true
+  #       breadcrumbs:
+  #         - type: NOOP
+  #           displayName: Extension 2.0
+  #         - type: ENTITY_LIST_REF
+  #           entityType: storage_insights:systems_fcport
+  #           displayName: Block System FC Ports
+  #     layout:
+  #       autoGenerate: false
+  #       cards: 
+  #         - key: storage_insightssystems_fcport_list_storage_insightssystems
+  #           type: ENTITIES_LIST
+  #         - type: INJECTIONS
+  #   propertiesCard:
+  #         properties:
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: fcport_name
+  #               displayName: Name
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: fcport_nk
+  #               displayName: Natural Key
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: system_id
+  #               displayName: System ID
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: fcport_status
+  #               displayName: Status
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: node
+  #               displayName: Node
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: speed_gbps
+  #               displayName: Speed(Gbps)
+  #   chartsCards: []
+  #   entitiesListCards: 
+  #     - key: storage_insightssystems_fcport_list_self
+  #       pageSize: 15
+  #       displayName: List of Block System FC Ports
+  #       displayCharts: false
+  #       enableDetailsExpandability: true
+  #       numberOfVisibleCharts: 3
+  #       displayIcons: true
+  #       hideEmptyCharts: true
+  #       filtering: 
+  #         entityFilters:
+  #           - displayName: Filter by
+  #             filters:
+  #               - type: entityName
+  #                 displayName: Name
+  #                 freeText: true
+  #                 modifier: contains
+  #                 defaultSearch: true
+  #                 distinct: false
+  #                 entityTypes:
+  #                   - storage_insights:systems_fcport
+  #       columns: []
+  #       charts: []
+  #     - key: storage_insightssystems_fcport_list_storage_insightssystems
+  #       pageSize: 5
+  #       displayName: List of related Block Storage Systems
+  #       displayCharts: false
+  #       enableDetailsExpandability: true
+  #       numberOfVisibleCharts: 3
+  #       displayIcons: true
+  #       entitySelectorTemplate: type(storage_insights:systems),toRelationships.isChildOf($(entityConditions))
+  #       hideEmptyCharts: true
+  #       filtering: 
+  #         entityFilters:
+  #           - displayName: Filter by
+  #             filters:
+  #               - type: entityName
+  #                 displayName: Name
+  #                 freeText: true
+  #                 modifier: contains
+  #                 defaultSearch: true
+  #                 distinct: false
+  #                 entityTypes:
+  #                   - storage_insights:systems
+  #       columns: []
+  #       charts: []
+  - entityType: storage_insights:systems_drive
+    actions: 
+      - actionScope: GLOBAL_LIST
+        actions: 
+          - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+            visualization:
+              iconOnly: false
+              icon: options-menu
+              displayName: Configure extension
+      - actionScope: GLOBAL_DETAILS
+        actions: 
+          - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+            visualization:
+              iconOnly: false
+              icon: options-menu
+              displayName: Configure extension
+    listSettings:
+      staticContent:
+        showGlobalFilter: false
+        header:
+          title: Drive entities
+          description: List of all entities created by the custom:ibm-storage-insights-extension extension
+        hideDefaultBreadcrumb: true
+        breadcrumbs:
+          - type: NOOP
+            displayName: Extension 2.0
+          - type: NOOP
+            displayName: Block System Drives
+      layout:
+        autoGenerate: false
+        cards:
+          - key: storage_insightssystems_drive_list_self
+            type: ENTITIES_LIST
+          - type: INJECTIONS
+    detailsSettings:
+      staticContent:
+        showProblems: true
+        showProperties: true
+        showTags: true
+        showGlobalFilter: false
+        showAddTag: true
+        breadcrumbs:
+          - type: NOOP
+            displayName: Extension 2.0
+          - type: ENTITY_LIST_REF
+            entityType: storage_insights:systems_drive
+            displayName: Block System Drives
+      layout:
+        autoGenerate: false
+        cards: 
+          - key: storage_insightssystems_drive_list_storage_insightssystems
+            type: ENTITIES_LIST
+          - type: INJECTIONS
+    propertiesCard:
+          properties:
+            - type: ATTRIBUTE
+              attribute:
+                key: drive_name
+                displayName: Name
+            - type: ATTRIBUTE
+              attribute:
+                key: drive_nk
+                displayName: Natural Key
+            - type: ATTRIBUTE
+              attribute:
+                key: system_id
+                displayName: System ID
+            - type: ATTRIBUTE
+              attribute:
+                key: drive_status
+                displayName: Status
+            - type: ATTRIBUTE
+              attribute:
+                key: raid_array
+                displayName: RAID Array
+            - type: ATTRIBUTE
+              attribute:
+                key: class
+                displayName: Class
+            - type: ATTRIBUTE
+              attribute:
+                key: speed_rpm
+                displayName: Speed(RPM)
+            - type: ATTRIBUTE
+              attribute:
+                key: capacity_bytes
+                displayName: Capacity Bytes
+            - type: ATTRIBUTE
+              attribute:
+                key: serial_number
+                displayName: Serial Number
+    chartsCards: []
+    entitiesListCards: 
+      - key: storage_insightssystems_drive_list_self
+        pageSize: 15
+        displayName: List of Block System Drives
+        displayCharts: false
+        enableDetailsExpandability: true
+        numberOfVisibleCharts: 3
+        displayIcons: true
+        hideEmptyCharts: true
+        filtering: 
+          entityFilters:
+            - displayName: Filter by
+              filters:
+                - type: entityName
+                  displayName: Name
+                  freeText: true
+                  modifier: contains
+                  defaultSearch: true
+                  distinct: false
+                  entityTypes:
+                    - storage_insights:systems_drive
+        columns: []
+        charts: []
+      - key: storage_insightssystems_drive_list_storage_insightssystems
+        pageSize: 5
+        displayName: List of related Block Storage Systems
+        displayCharts: false
+        enableDetailsExpandability: true
+        numberOfVisibleCharts: 3
+        displayIcons: true
+        entitySelectorTemplate: type(storage_insights:systems),toRelationships.isChildOf($(entityConditions))
+        hideEmptyCharts: true
+        filtering: 
+          entityFilters:
+            - displayName: Filter by
+              filters:
+                - type: entityName
+                  displayName: Name
+                  freeText: true
+                  modifier: contains
+                  defaultSearch: true
+                  distinct: false
+                  entityTypes:
+                    - storage_insights:systems
+        columns: []
+        charts: []
+  # - entityType: storage_insights:systems_ipport
+  #   actions: 
+  #     - actionScope: GLOBAL_LIST
+  #       actions: 
+  #         - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+  #           visualization:
+  #             iconOnly: false
+  #             icon: options-menu
+  #             displayName: Configure extension
+  #     - actionScope: GLOBAL_DETAILS
+  #       actions: 
+  #         - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+  #           visualization:
+  #             iconOnly: false
+  #             icon: options-menu
+  #             displayName: Configure extension
+  #   listSettings:
+  #     staticContent:
+  #       showGlobalFilter: false
+  #       header:
+  #         title: IP Port entities
+  #         description: List of all entities created by the custom:ibm-storage-insights-extension extension
+  #       hideDefaultBreadcrumb: true
+  #       breadcrumbs:
+  #         - type: NOOP
+  #           displayName: Extension 2.0
+  #         - type: NOOP
+  #           displayName: Block System IP Ports
+  #     layout:
+  #       autoGenerate: false
+  #       cards:
+  #         - key: storage_insightssystems_ipport_list_self
+  #           type: ENTITIES_LIST
+  #         - type: INJECTIONS
+  #   detailsSettings:
+  #     staticContent:
+  #       showProblems: true
+  #       showProperties: true
+  #       showTags: true
+  #       showGlobalFilter: false
+  #       showAddTag: true
+  #       breadcrumbs:
+  #         - type: NOOP
+  #           displayName: Extension 2.0
+  #         - type: ENTITY_LIST_REF
+  #           entityType: storage_insights:systems_ipport
+  #           displayName: Block System IP Ports
+  #     layout:
+  #       autoGenerate: false
+  #       cards: 
+  #         - key: storage_insightssystems_ipport_list_storage_insightssystems
+  #           type: ENTITIES_LIST
+  #         - type: INJECTIONS
+  #   propertiesCard:
+  #         properties:
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: ipport_name
+  #               displayName: Name
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: ipport_nk
+  #               displayName: Natural Key
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: system_id
+  #               displayName: System ID
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: ipport_status
+  #               displayName: Status
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: iqn
+  #               displayName: IQN
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: is_host_attached
+  #               displayName: Host Attach
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: is_storage_attached
+  #               displayName: Storage Attach
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: speed_gbps
+  #               displayName: Speed(Gbps)
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: storage_system
+  #               displayName: Storage System
+  #   chartsCards: []
+  #   entitiesListCards: 
+  #     - key: storage_insightssystems_ipport_list_self
+  #       pageSize: 15
+  #       displayName: List of Block System IP Ports
+  #       displayCharts: false
+  #       enableDetailsExpandability: true
+  #       numberOfVisibleCharts: 3
+  #       displayIcons: true
+  #       hideEmptyCharts: true
+  #       filtering: 
+  #         entityFilters:
+  #           - displayName: Filter by
+  #             filters:
+  #               - type: entityName
+  #                 displayName: Name
+  #                 freeText: true
+  #                 modifier: contains
+  #                 defaultSearch: true
+  #                 distinct: false
+  #                 entityTypes:
+  #                   - storage_insights:systems_ipport
+  #       columns: []
+  #       charts: []
+  #     - key: storage_insightssystems_ipport_list_storage_insightssystems
+  #       pageSize: 5
+  #       displayName: List of related Block Storage Systems
+  #       displayCharts: false
+  #       enableDetailsExpandability: true
+  #       numberOfVisibleCharts: 3
+  #       displayIcons: true
+  #       entitySelectorTemplate: type(storage_insights:systems),toRelationships.isChildOf($(entityConditions))
+  #       hideEmptyCharts: true
+  #       filtering: 
+  #         entityFilters:
+  #           - displayName: Filter by
+  #             filters:
+  #               - type: entityName
+  #                 displayName: Name
+  #                 freeText: true
+  #                 modifier: contains
+  #                 defaultSearch: true
+  #                 distinct: false
+  #                 entityTypes:
+  #                   - storage_insights:systems
+  #       columns: []
+  #       charts: []
+  # - entityType: storage_insights:systems_mdisk
+  #   actions: 
+  #     - actionScope: GLOBAL_LIST
+  #       actions: 
+  #         - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+  #           visualization:
+  #             iconOnly: false
+  #             icon: options-menu
+  #             displayName: Configure extension
+  #     - actionScope: GLOBAL_DETAILS
+  #       actions: 
+  #         - actionExpression: hubExtension|extensionId=custom:ibm-storage-insights-extension|text=configure
+  #           visualization:
+  #             iconOnly: false
+  #             icon: options-menu
+  #             displayName: Configure extension
+  #   listSettings:
+  #     staticContent:
+  #       showGlobalFilter: false
+  #       header:
+  #         title: Managed Disk entities
+  #         description: List of all entities created by the custom:ibm-storage-insights-extension extension
+  #       hideDefaultBreadcrumb: true
+  #       breadcrumbs:
+  #         - type: NOOP
+  #           displayName: Extension 2.0
+  #         - type: NOOP
+  #           displayName: Block System Managed Disks
+  #     layout:
+  #       autoGenerate: false
+  #       cards:
+  #         - key: storage_insightssystems_mdisk_list_self
+  #           type: ENTITIES_LIST
+  #         - type: INJECTIONS
+  #   detailsSettings:
+  #     staticContent:
+  #       showProblems: true
+  #       showProperties: true
+  #       showTags: true
+  #       showGlobalFilter: false
+  #       showAddTag: true
+  #       breadcrumbs:
+  #         - type: NOOP
+  #           displayName: Extension 2.0
+  #         - type: ENTITY_LIST_REF
+  #           entityType: storage_insights:systems_mdisk
+  #           displayName: Block System Managed Disks
+  #     layout:
+  #       autoGenerate: false
+  #       cards: 
+  #         - key: storage_insightssystems_mdisk_list_storage_insightssystems
+  #           type: ENTITIES_LIST
+  #         - type: INJECTIONS
+  #   propertiesCard:
+  #         properties:
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: mdisk_name
+  #               displayName: Name
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: mdisk_nk
+  #               displayName: Natural Key
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: system_id
+  #               displayName: System ID
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: mdisk_status
+  #               displayName: Status
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: avail_cap_bytes
+  #               displayName: Available Capacity Bytes
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: capacity_bytes
+  #               displayName: Capacity Bytes
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: drive_comp_ratio
+  #               displayName: Drive Compression Ratio
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: total_comp_ratio
+  #               displayName: Total Compression Ratio
+  #           - type: ATTRIBUTE
+  #             attribute:
+  #               key: volumes_count
+  #               displayName: Volumes
+  #   chartsCards: []
+  #   entitiesListCards: 
+  #     - key: storage_insightssystems_mdisk_list_self
+  #       pageSize: 15
+  #       displayName: List of Block System Managed Disks
+  #       displayCharts: false
+  #       enableDetailsExpandability: true
+  #       numberOfVisibleCharts: 3
+  #       displayIcons: true
+  #       hideEmptyCharts: true
+  #       filtering: 
+  #         entityFilters:
+  #           - displayName: Filter by
+  #             filters:
+  #               - type: entityName
+  #                 displayName: Name
+  #                 freeText: true
+  #                 modifier: contains
+  #                 defaultSearch: true
+  #                 distinct: false
+  #                 entityTypes:
+  #                   - storage_insights:systems_mdisk
+  #       columns: []
+  #       charts: []
+  #     - key: storage_insightssystems_mdisk_list_storage_insightssystems
+  #       pageSize: 5
+  #       displayName: List of related Block Storage Systems
+  #       displayCharts: false
+  #       enableDetailsExpandability: true
+  #       numberOfVisibleCharts: 3
+  #       displayIcons: true
+  #       entitySelectorTemplate: type(storage_insights:systems),toRelationships.isChildOf($(entityConditions))
+  #       hideEmptyCharts: true
+  #       filtering: 
+  #         entityFilters:
+  #           - displayName: Filter by
+  #             filters:
+  #               - type: entityName
+  #                 displayName: Name
+  #                 freeText: true
+  #                 modifier: contains
+  #                 defaultSearch: true
+  #                 distinct: false
+  #                 entityTypes:
+  #                   - storage_insights:systems
+  #       columns: []
+  #       charts: []
