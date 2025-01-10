@@ -179,13 +179,7 @@ The IBM Storage Insights Dynatrace Extension 2.0 enables customers to seamlessly
 
   - List all Storage Pools.
 
-  - List all Managed Disks.
-
   - List all Drives.
-
-  - List all FC Ports.
-
-  - List all IP Ports.
 
   - Top 5 Volumes performance metrics. Please use Dynatrace Data Explorer to view metrics for better results.
 
