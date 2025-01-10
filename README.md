@@ -76,7 +76,7 @@ The IBM Storage Insights Dynatrace Extension 2.0 enables customers to seamlessly
       ```bash
       dt-sdk build --extra-platform None
       ```
-  4. The `dt-sdk` command needs to be executed on the github repo machine mentioned in step 5.2.1 is cloned.
+  4. The `dt-sdk` command needs to be executed on the machine where the github repo mentioned in step 5.2.1 is cloned.
   5. A zip file named custom_ibm-storage-insights-extension-0.0.1.zip will be generated inside dist folder.
 
   ### 5.3 Upload IBM Storage Insights Dynatrace Extension
