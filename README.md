@@ -79,7 +79,7 @@ The IBM Storage Insights Dynatrace Extension 2.0 enables customers to seamlessly
   4. The `dt-sdk` command needs to be executed on the machine where the github repo mentioned in step 5.2.1 is cloned.
   5. A zip file named custom_ibm-storage-insights-extension-0.0.1.zip will be generated inside dist folder.
 
-  ### 5.3 Upload IBM Storage Insights Dynatrace Extension
+  ### 5.3. Upload IBM Storage Insights Dynatrace Extension
 
   1. Login Dynatrace GUI -> Search -> Credential Vault.
   2. Add extension root certificate, ca.pem generated in step 5.1.3 to Dynatrace Credential Vault. Go to Credential Vault -> Add new credential.
@@ -89,12 +89,12 @@ The IBM Storage Insights Dynatrace Extension 2.0 enables customers to seamlessly
 
   3. Copy extension root certificate, ca.pem generated in step 5.1.3 to ActiveGate VM. For example in Linux, copy ca.pem to /var/lib/dynatrace/remotepluginmodule/agent/conf/certificates folder. 
   4. Similarly in Windows machine, copy ca.pem to %ProgramData%\dynatrace\remotepluginmodule\agent\conf\certificates.
-  5. Upload extension zip file custom_ibm-storage-insights-extension-0.0.1.zip, generated in step 5.2.4 to Dynatrace using "Upload custom Extension 2.0" option. Go to Extensions -> Upload custom Extension 2.0
+  5. Upload extension zip file custom_ibm-storage-insights-extension-0.0.1.zip, generated in step 5.2.5 to Dynatrace using "Upload custom Extension 2.0" option. Go to Extensions -> Upload custom Extension 2.0
   <div align="center">
     <img src="./images/upload_extension.png" alt="Upload Extension" width="700" height="400">
   </div>
 
-  ### 5.4 Configure IBM Storage Insights Dynatrace Extension
+  ### 5.4. Configure IBM Storage Insights Dynatrace Extension
 
   1. Go to Extension -> Click on custom:ibm-storage-insights-extension
 
@@ -117,7 +117,7 @@ The IBM Storage Insights Dynatrace Extension 2.0 enables customers to seamlessly
   9. Provide a monitoring config label name.
   10. Click on Activate.
 
-  ### 5.5 IBM Storage Insights Tenant Overview Dashboard
+  ### 5.5. IBM Storage Insights Tenant Overview Dashboard
 
   1. Go to Dashboards -> Upload -> Import storage_insights_tenant_overview_dashboard.json from dashboards folder.
 
@@ -137,7 +137,7 @@ The IBM Storage Insights Dynatrace Extension 2.0 enables customers to seamlessly
   <img src="./images/tenant_overview_dashboard.jpg" alt="Tenant Overview Dashboard" width="700" height="400">
 </div>
 
-  ### 5.6 IBM Storage Insights Tenant Performance Dashboard
+  ### 5.6. IBM Storage Insights Tenant Performance Dashboard
 
   1. Go to Dashboards -> Upload -> Import storage_insights_tenant_performance_dashboard.json from dashboards folder.
 
@@ -167,7 +167,7 @@ The IBM Storage Insights Dynatrace Extension 2.0 enables customers to seamlessly
     <img src="./images/tenant_performance_dashboard.png" alt="Tenant Performance Dashboard" width="700" height="400">
   </div>
 
-  ### 5.7 IBM Storage Insights Tenant Storage Systems Dashboard
+  ### 5.7. IBM Storage Insights Tenant Storage Systems Dashboard
 
   1. Go to Dashboards -> Select IBM Storage Insights - Tenant Overview  Dashboard -> Click on Storage Insights Block Systems Entities link at top right corner.
 
