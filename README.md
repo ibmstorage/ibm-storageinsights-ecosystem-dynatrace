@@ -49,7 +49,7 @@ The IBM Storage Insights Dynatrace Extension 2.0 enables customers to seamlessly
 ## 5. Install IBM Storage Insights Dynatrace Extension
   ### 5.1. Generate IBM Storage Insights Dynatrace Extension Certificates
 
-  1. Go to Home directory.
+  1. Go to Home directory on the machine where github repo mentioned in step 5.2.1 is cloned.
       ```bash
       cd ~
       ```
